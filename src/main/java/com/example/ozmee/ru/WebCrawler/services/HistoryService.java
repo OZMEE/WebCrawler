@@ -9,9 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class HistoryService {
@@ -26,5 +27,7 @@ public class HistoryService {
         historyRepository.save(history);
     }
 
-
+    public Optional<History> findForUrl(String url){
+        return historyRepository.findByUrl(url);
+    }
 }

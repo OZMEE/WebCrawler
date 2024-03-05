@@ -1,38 +1,61 @@
 package com.example.ozmee.ru.WebCrawler.controllers;
 
 import com.example.ozmee.ru.WebCrawler.crawler.Crawler;
-import com.example.ozmee.ru.WebCrawler.crawler.Crawler2;
+import com.example.ozmee.ru.WebCrawler.crawler.Planner;
 import com.example.ozmee.ru.WebCrawler.entities.Page;
-import com.example.ozmee.ru.WebCrawler.entities.SearchRequest;
+import com.example.ozmee.ru.WebCrawler.dto.SearchRequest;
 import com.example.ozmee.ru.WebCrawler.services.PageService;
+import com.example.ozmee.ru.WebCrawler.util.SearchRequestValidator;
+import com.example.ozmee.ru.WebCrawler.util.exc.CantCrawlUrlException;
+import com.example.ozmee.ru.WebCrawler.util.exc.SearchRequestError;
 import jakarta.validation.Valid;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/crawler")
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ReferenceController {
-    private final Crawler crawler;
-    private final PageService pageService;
+    Crawler crawler;
+    PageService pageService;
 
-    //List<Crawler2> crawlers = new ArrayList<>();
+    SearchRequestValidator searchRequestValidator;
+    Planner planner;
 
-    @GetMapping("/scan")
-    public ResponseEntity<Boolean> search(){
+    @PostMapping("/scan")
+    public ResponseEntity<Boolean> search(@RequestBody @Valid SearchRequest request, BindingResult bindingResult){
+        searchRequestValidator.validate(request, bindingResult);
+        System.out.println(request);
 
-        crawler.scan("https://javarush.com/groups/posts/2542-otvetih-na-samihe-populjarnihe-voprosih-ob-interfeyse-map");
+        if(bindingResult.hasErrors()){
+            List<FieldError> errors = bindingResult.getFieldErrors();
+            StringBuilder str = new StringBuilder();
+            for(FieldError error : errors){
+                str.append(error.getField()).append(" - ").append(error.getDefaultMessage());
+            }
+
+            throw new CantCrawlUrlException(str.toString());
+        }
+
+        planner.plan(request.getReference(), request.getDeep());
 
         return ResponseEntity.ok(true);
+    }
+
+    @ExceptionHandler
+    private ResponseEntity<SearchRequestError> handler(CantCrawlUrlException e){
+        SearchRequestError error = new SearchRequestError(e.getMessage(), System.currentTimeMillis());
+
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping

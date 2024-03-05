@@ -18,7 +18,6 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class PageService {
     PageRepository pageRepository;
-    ThreadPool
 
     public Optional<Page> searchByUrl(String name){
         return pageRepository.searchByUrl(name);

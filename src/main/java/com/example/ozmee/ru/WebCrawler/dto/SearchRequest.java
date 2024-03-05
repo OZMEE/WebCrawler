@@ -1,4 +1,4 @@
-package com.example.ozmee.ru.WebCrawler.entities;
+package com.example.ozmee.ru.WebCrawler.dto;
 
 
 import jakarta.persistence.Entity;
@@ -14,8 +14,8 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@ToString
 public class SearchRequest {
     String reference;
-
     int deep;
 }

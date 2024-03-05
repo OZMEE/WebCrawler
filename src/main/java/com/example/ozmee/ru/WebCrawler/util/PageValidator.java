@@ -18,12 +18,6 @@ public class PageValidator {
     public boolean isValidWebsite(String url){
         return isHttp(url) && !isFile(url);
     }
-    /*
-    private boolean isDuplicate(String url){
-        Optional<Page> page = pageService.searchByUrl(url);
-        return page.isPresent();
-    }
-     */
 
     boolean isHttp(String url){
         return url.startsWith("https://") || url.startsWith("http://");

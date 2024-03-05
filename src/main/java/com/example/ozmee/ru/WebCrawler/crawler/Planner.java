@@ -23,19 +23,15 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class Planner {
-    ApplicationContext applicationContext;
     HistoryService historyService;
-
     PageValidator pageValidator;
 
-    List<Crawler> crawlers = new ArrayList<>();
+    Crawler crawler;
 
-    @Async("taskExecutor")
-    public HttpStatus plan(String url){
+    public HttpStatus plan(String url, int deep){
         if(!pageValidator.isValidWebsite(url)){
             throw new NotValidReferenceException();
         }
-        Crawler crawlerForScan = getCrawlerForScan();
 
         History history = History.builder()
                 .url(url)
@@ -43,28 +39,20 @@ public class Planner {
                 .isCompleted(false)
                 .build();
 
-        boolean isCompleted = false;
+        historyService.save(history);
 
-        isCompleted = crawlerForScan.scan(url);
+        synchronized (crawler) {
+            boolean isCompleted = false;
 
-        if(isCompleted){
-            history.setCompleted(true);
-        }
+            isCompleted = crawler.scan(url, deep);
 
-        return HttpStatus.OK;
-    }
-
-    public Crawler getCrawlerForScan(){
-        Crawler crawlerForScan = null;
-        for(Crawler crawler : crawlers){
-            if(crawlerForScan == null && !crawler.isScan()){
-                crawlerForScan = crawler;
+            if (isCompleted) {
+                history.setCompleted(true);
             }
         }
-        if(crawlerForScan == null){
-            crawlerForScan = applicationContext.getBean(Crawler.class);
-            crawlers.add(crawlerForScan);
-        }
-        return crawlerForScan;
+
+        historyService.save(history);
+
+        return HttpStatus.OK;
     }
 }

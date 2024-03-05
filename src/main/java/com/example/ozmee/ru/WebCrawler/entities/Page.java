@@ -32,6 +32,6 @@ public class Page {
     public boolean equals(Object o){
         Page page = (Page)o;
 
-        return Objects.equals(name, page.name) && url.equals(page.url) && isFile == page.isFile;
+        return name.equals(page.getName()) && url.equals(page.getUrl()) && isFile == page.isFile();
     }
 }
