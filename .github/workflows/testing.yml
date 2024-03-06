@@ -18,6 +18,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Install Lombok
+        run: mvn org.projectlombok:lombok-maven-plugin:1.18.22:delombok
+
       - name: Set up JDK 17
         uses: actions/setup-java@v2
         with:
