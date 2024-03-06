@@ -17,7 +17,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Page {
+public class  Page {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;

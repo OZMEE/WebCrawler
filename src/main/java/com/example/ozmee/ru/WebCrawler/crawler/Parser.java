@@ -38,7 +38,7 @@ public class Parser {
             HttpURLConnection connection = (HttpURLConnection) xmlUrl.openConnection();
             long length = connection.getContentLengthLong();
 
-            if(length > 10_000){
+            if(length > 1_000){
                 list.add(url);
                 return list;
             }
