@@ -8,6 +8,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -29,10 +30,41 @@ public class PageService {
         pageRepository.save(page);
     }
 
+    public void checkConstraints(Collection<Page> pages){
+        for(Page page : pages){
+            if(page.getName().length() >= Page.getMaxLengthName()){
+                page.setName(page.getName().substring(0, Page.getMaxLengthName()));
+                page.setFitIn(false);
+            }
+            if(page.getUrl().length() >= Page.getMaxLengthUrl()){
+                page.setUrl(page.getUrl().substring(0, Page.getMaxLengthUrl()));
+                page.setFitIn(false);
+            }
+        }
+    }
+
+    @Transactional
+    public void saveAllPages(Collection<Page> pages){
+        checkConstraints(pages);
+        pageRepository.saveAll(pages);
+    }
+
     @Transactional
     public void saveAll(Collection<Page> pages){
         System.out.println("Сохраняет лист страниц: ");
-        pageRepository.saveAll(pages);
+        Collection<Page> pageToSave = new ArrayList<>();
+        int index = 1;
+        for(Page page : pages) {
+            if (index % 1500 == 0) {
+                saveAll(pageToSave);
+                pageToSave = new ArrayList<>();
+            }
+            pageToSave.add(page);
+            index++;
+        }
+        if(pageToSave.size() != 0){
+            saveAll(pageToSave);
+        }
     }
 
     public List<Page> findAll(){

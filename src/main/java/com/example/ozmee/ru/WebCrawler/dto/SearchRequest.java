@@ -16,6 +16,8 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @ToString
 public class SearchRequest {
+
     String reference;
+
     int deep;
 }

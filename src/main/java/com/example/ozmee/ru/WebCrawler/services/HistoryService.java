@@ -1,6 +1,6 @@
 package com.example.ozmee.ru.WebCrawler.services;
 
-import com.example.ozmee.ru.WebCrawler.entities.History;
+import com.example.ozmee.ru.WebCrawler.entities.HistoryOfOperation;
 import com.example.ozmee.ru.WebCrawler.repositories.HistoryRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -18,16 +18,16 @@ import java.util.Optional;
 public class HistoryService {
     HistoryRepository historyRepository;
 
-    public List<History> getAll(){
+    public List<HistoryOfOperation> getAll(){
         return historyRepository.findAll();
     }
 
     @Transactional
-    public void save(History history){
+    public void save(HistoryOfOperation history){
         historyRepository.save(history);
     }
 
-    public Optional<History> findForUrl(String url){
+    public Optional<HistoryOfOperation> findForUrl(String url){
         return historyRepository.findByUrl(url);
     }
 }

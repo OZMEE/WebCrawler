@@ -1,14 +1,12 @@
 package com.example.ozmee.ru.WebCrawler.controllers;
 
 import com.example.ozmee.ru.WebCrawler.dto.HistoryDTO;
-import com.example.ozmee.ru.WebCrawler.entities.History;
+import com.example.ozmee.ru.WebCrawler.entities.HistoryOfOperation;
 import com.example.ozmee.ru.WebCrawler.services.HistoryService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -26,7 +24,7 @@ public class HistoryController {
     }
 
 
-    private HistoryDTO convertToHistoryDTO(History history){
+    private HistoryDTO convertToHistoryDTO(HistoryOfOperation history){
         return modelMapper.map(history, HistoryDTO.class);
     }
 

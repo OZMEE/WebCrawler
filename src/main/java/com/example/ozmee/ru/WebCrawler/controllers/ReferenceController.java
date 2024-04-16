@@ -12,11 +12,17 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.context.event.ApplicationContextInitializedEvent;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.support.XmlWebApplicationContext;
 
 import java.util.List;
 
@@ -28,11 +34,14 @@ public class ReferenceController {
     Crawler crawler;
     PageService pageService;
 
+    ApplicationContext context;
+
     SearchRequestValidator searchRequestValidator;
     Planner planner;
 
     @PostMapping("/scan")
-    public ResponseEntity<Boolean> search(@RequestBody @Valid SearchRequest request, BindingResult bindingResult){
+    public ResponseEntity<Boolean> search(@RequestBody @Valid SearchRequest request,
+                                          BindingResult bindingResult){
         searchRequestValidator.validate(request, bindingResult);
         System.out.println(request);
 
@@ -46,7 +55,7 @@ public class ReferenceController {
             throw new CantCrawlUrlException(str.toString());
         }
 
-        planner.plan(request.getReference(), request.getDeep());
+        ApplicationContext context = new AnnotationConfigApplicationContext();
 
         return ResponseEntity.ok(true);
     }

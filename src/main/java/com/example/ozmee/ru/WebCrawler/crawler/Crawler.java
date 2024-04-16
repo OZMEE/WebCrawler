@@ -6,7 +6,6 @@ import com.example.ozmee.ru.WebCrawler.util.PageValidator;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
@@ -60,7 +59,7 @@ public class Crawler {
         System.out.println("Parsed links: " + parsedLinks.toString());
 
         if(level == deep){
-            pageService.saveAll(parser.convertListUrlToListPage(parsedLinks));
+            pageService.saveAllPages(parser.convertListUrlToListPage(parsedLinks));
             return;
         }
 
@@ -92,7 +91,7 @@ public class Crawler {
         }
 
         List<Page> pagesToSave = parser.convertListUrlToListPage(listToSave);
-        pageService.saveAll(pagesToSave);
+        pageService.saveAllPages(pagesToSave);
 
         return listToParse;
     }

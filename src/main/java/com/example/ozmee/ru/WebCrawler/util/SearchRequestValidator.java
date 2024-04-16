@@ -1,6 +1,6 @@
 package com.example.ozmee.ru.WebCrawler.util;
 
-import com.example.ozmee.ru.WebCrawler.entities.History;
+import com.example.ozmee.ru.WebCrawler.entities.HistoryOfOperation;
 import com.example.ozmee.ru.WebCrawler.dto.SearchRequest;
 import com.example.ozmee.ru.WebCrawler.services.HistoryService;
 import lombok.AccessLevel;
@@ -18,7 +18,7 @@ public class SearchRequestValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return clazz.equals(History.class);
+        return clazz.equals(HistoryOfOperation.class);
     }
 
     @Override

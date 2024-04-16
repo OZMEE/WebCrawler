@@ -14,7 +14,6 @@ class PageValidatorTest {
     PageValidatorTest(PageValidator pageValidator){
         this.pageValidator = pageValidator;
     }
-
     @Test
     void isValidWebsite() {
         String value = "https://www.youtube.com/";
