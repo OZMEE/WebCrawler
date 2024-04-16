@@ -31,10 +31,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ReferenceController {
-    Crawler crawler;
     PageService pageService;
-
-    ApplicationContext context;
 
     SearchRequestValidator searchRequestValidator;
     Planner planner;
@@ -55,7 +52,7 @@ public class ReferenceController {
             throw new CantCrawlUrlException(str.toString());
         }
 
-        ApplicationContext context = new AnnotationConfigApplicationContext();
+        planner.plan(request.getReference(), request.getDeep());
 
         return ResponseEntity.ok(true);
     }
